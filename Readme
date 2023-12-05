@@ -1,0 +1,6 @@
+Activation steps:
+
+1. Everything runs from the 'main.py' file
+2. To create sample data, customers, books and loans - enter '7' after running the Main Menu:
+    - This will create 5 customers, books, and loans
+    - 2 additional loans will be created with expired return dates to test the 'Display all late loans' function.
