@@ -6,7 +6,19 @@ import unittest
 
 
 def main_menu():
+    """
+    Display the main menu and prompt user for action.
+
+    This function presents the main menu options to the user and captures user input.
+    It ensures that the user's input is valid and corresponds to one of the available actions.
+
+    Returns:
+        str: The user's chosen action as a string.
+    """
+    # List of valid actions that can be taken from the main menu.
     possible_actions = ['1', '2', '3', '4', '5', '6', '7', '0']
+
+    # Displaying the main menu options to the user.
     print('\n*** Welcome to LiberBook! **\n'
           '\n*** Enter [0] at any time to return to the previous menu***\n'
           '\n[1] Customer menu\n'
@@ -17,39 +29,47 @@ def main_menu():
           '[6] Run Unit Testing\n'
           '[7] Create sample data\n'
           '[0] Exit')
-    action1 = input('-->')
 
-    while action1 not in possible_actions:
+    # Capturing and validating user input.
+    action = input('-->')
+    while action not in possible_actions:
         print("Invalid entry. Please choose one of the options in the menu")
-        action1 = input('-->')
+        action = input('-->')
 
-    return action1
-
+    return action
 
 def menu_navigator():
+    """
+    Navigate through the application's menu system.
+
+    This function utilizes the main_menu function to get the user's choice and
+    then navigates to the appropriate functionality based on that choice.
+    It's a recursive function that continues to present the main menu after
+    each action until the user decides to exit.
+    """
+    # Get the user's action from the main menu.
     action = main_menu()
+
+    # Match the user's action to the corresponding functionality.
     match action:
         case '1':
             customer_menu()
-            menu_navigator()
         case '2':
             book_menu()
-            menu_navigator()
         case '3':
             loan_menu()
-            menu_navigator()
         case '4':
             find_customer_by_name()
-            menu_navigator()
         case '5':
             find_book_by_title()
-            menu_navigator()
         case '6':
+            # Run unit tests from the 'tester' module.
             unittest.main(module='tester', exit=False)
-            menu_navigator()
         case '7':
             create_sample_data()
-            menu_navigator()
         case '0':
-            'Goodbye!'
+            print('Goodbye!')
             exit(0)
+
+    # Recall the menu navigator to present the main menu again.
+    menu_navigator()

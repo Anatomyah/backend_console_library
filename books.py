@@ -6,28 +6,46 @@ from datetime import timedelta
 
 
 class Book(DataBaseHandler):
+    """
+    Represents a book in the library system.
+
+    Inherits from the DataBaseHandler class and manages book-related data.
+
+    Args:
+        title (str): Title of the book.
+        author_pname (str): Author's first name.
+        author_lname (str): Author's last name.
+        year_published (int): Year the book was published.
+        book_type (str): Type of the book.
+        id_ (int, optional): ID of the book. Auto-generated if not provided.
+        override_id (bool, optional): Whether to use the provided id_ or auto-generate.
+
+    Attributes are managed through Python properties to enforce data validation and integrity.
+    """
+
     def __init__(self, title, author_pname, author_lname, year_published, book_type, id_=None, override_id=False):
+        # Initializing book attributes
         self.title = title
         self.auth_pname = author_pname
         self.auth_lname = author_lname
         self.published = year_published
         self.book_type = book_type
 
+        # ID assignment logic - auto-generate if not overridden
         if override_id is False:
             rowid = query_db(query="SELECT MAX(rowid) FROM books", result=True)[0][0]
-            if not rowid:
-                self.id = 1
-            else:
-                self.id = str(int(rowid) + 1)
+            self.id = str(int(rowid) + 1) if rowid else 1
         if override_id:
             self.id = id_
 
     @property
     def title(self):
+        # Getter for book's title
         return self._title
 
     @title.setter
     def title(self, new_val):
+        # Setter for book's title with validation
         valid_res = regex_check(RE_PATT_D['title'], new_val)
 
         if not valid_res:
@@ -36,6 +54,7 @@ class Book(DataBaseHandler):
         else:
             self._title = new_val
 
+    # Similar structure for other properties like author's name, publication year, and book type
     @property
     def auth_pname(self):
         return self._auth_pname
@@ -97,6 +116,13 @@ class Book(DataBaseHandler):
             self._book_type = new_val
 
     def get_book_type_duration(self):
+        """
+              Determines the loan duration based on the book type.
+
+              Returns:
+                  timedelta: The duration for which the book can be loaned.
+              """
+        # Logic to determine loan duration based on book type
         duration = None
 
         if str(self._book_type) == '1':
@@ -109,19 +135,30 @@ class Book(DataBaseHandler):
         return timedelta(days=duration)
 
     def obj_to_values(self):
+        # Convert book object attributes to a tuple for database operations
         return (f'{self.id}', f'{self.title}', f'{self.auth_pname}', f'{self._auth_lname}',
                 f'{self.published}', f'{self.book_type}')
 
     def get_table(self):
+        # Method to specify the database table name
         return 'books'
 
     def get_fieldnames(self):
+        # Method to provide the field names for the database table
         return BOOKS_FIELDNAMES
 
     def get_id(self):
+        # Getter for the book's ID
         return self.id
 
     def show(self):
+        """
+              Class method to load book data from the database and create book objects.
+
+              Returns:
+                  list: A list of Book objects loaded from the database.
+              """
+        # Loading book data from the database and creating book objects
         print(f"\n*** Book Details ***\n"
               f"ID: {self.id}\n"
               f"Name: {self._title}\n"
@@ -131,6 +168,13 @@ class Book(DataBaseHandler):
 
     @classmethod
     def load_from_db(cls):
+        """
+               Class method to load book data from the database and create book objects.
+
+               Returns:
+                   list: A list of Book objects loaded from the database.
+               """
+        # Loading book data from the database and creating book objects
         client_data = cls.load(table='books')
 
         objects = []
@@ -147,6 +191,10 @@ class Book(DataBaseHandler):
 
     @classmethod
     def create_book_table(cls):
+        """
+               Class method to create the books table in the database if it does not exist.
+               """
+        # SQL query to create the books table
         query = """
         CREATE TABLE IF NOT EXISTS books (
             id TEXT PRIMARY KEY,

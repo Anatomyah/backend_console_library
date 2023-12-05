@@ -3,6 +3,7 @@ from books import Book
 from loans import Loan
 from helpers import query_db
 
+# Predefined lists of sample customers, books, and loans.
 CUSTOMER_LST = [('123456789', 'Tom', 'Kedar', 'Jerusalem', '33'), ('123456788', 'Moshe', 'Cohen', 'Jerusalem', '28'),
                 ('123456787', 'Refael', 'Bitton', 'Jerusalem', '45'),
                 ('123456786', 'Avishai', 'Derii', 'Jerusalem', '12'),
@@ -19,23 +20,30 @@ LOAN_LST = [('123456789', '1'), ('123456788', '2'), ('123456787', '3'), ('123456
 
 
 def create_sample_data():
+    """
+    Populate the database with sample data for customers, books, and loans.
+
+    This function iterates over predefined lists of customers, books, and loans,
+    creating and saving instances of each in the database. It also includes
+    additional queries to insert specific loan records.
+    """
+    # Creating and saving customer instances to the database.
     for customer in CUSTOMER_LST:
         c = Customer(id_=customer[0], p_name=customer[1], l_name=customer[2], city=customer[3], age=customer[4])
-        c.save()
+        c.save()  # Save each customer to the database.
 
+    # Creating and saving book instances to the database.
     for book in BOOK_LST:
-        b = Book(title=book[0], author_pname=book[1], author_lname=book[2], year_published=book[3],
-                 book_type=book[4])
-        b.save()
+        b = Book(title=book[0], author_pname=book[1], author_lname=book[2], year_published=book[3], book_type=book[4])
+        b.save()  # Save each book to the database.
 
+    # Creating and saving loan instances to the database.
     for loan in LOAN_LST:
         l = Loan(customer_id=loan[0], book_id=loan[1])
-        l.save()
+        l.save()  # Save each loan to the database.
 
+    # Executing additional queries to insert specific loan records.
     query_db(query = "INSERT INTO loans (id, custID, bookID, loandate, expected_returndate, actual_returndate)"
                      " VALUES (6, 123456789, 6, '2023-04-05', '2023-04-10', 'Not returned');")
-
     query_db(query= "INSERT INTO loans (id, custID, bookID, loandate, expected_returndate, actual_returndate)"
                      " VALUES (7, 123456789, 7, '2023-04-12', '2023-04-14', 'Not returned');")
-
-

@@ -1,15 +1,28 @@
-DATABASE = r'system_files\library.db'
-LOGGER = r'system_files\logger'
+# Database file path configuration
+DATABASE = r'system_files\library.db'  # Path to the library database file
+LOGGER = r'system_files\logger'        # Path to the logger file
 
-BOOKS_FIELDNAMES = 'id, title, author_pname, author_lname, publication_year, type'
-CUSTOMERS_FIELDNAMES = 'id, p_name, l_name, city, age'
-LOAN_FIELDNAMES = 'id, custID, bookID, loandate, expected_returndate, actual_returndate'
+# Fieldnames for different tables in the database
+BOOKS_FIELDNAMES = 'id, title, author_pname, author_lname, publication_year, type'  # Column names for books table
+CUSTOMERS_FIELDNAMES = 'id, p_name, l_name, city, age'  # Column names for customers table
+LOAN_FIELDNAMES = 'id, custID, bookID, loandate, expected_returndate, actual_returndate'  # Column names for loan table
 
-RE_PATT_D = {'custID': r'^\d{6,9}$', 'p_name': r'^[a-z][a-z- .]{1,19}$', 'l_name': r"^[a-z][a-z- .']{1,19}$",
-             'age': r'^\d{1,3}$', 'city': r'^[a-z][a-z- ]{1,19}$', 'bookID': r'^\d{1,5}$',
-             'title': r"^[a-z0-9][a-z0-9- ,.':]{1,59}$", 'pub_year': r'^\d{4}$', 'book_type': r'^[1-3]$',
-             'date': r'^\d{4}-\d{2}-\d{2}$', 'loanID': r'^\d{1,5}$'}
+# Regular expression patterns for data validation
+RE_PATT_D = {
+    'custID': r'^\d{6,9}$',  # Pattern for customer ID
+    'p_name': r'^[a-z][a-z- .]{1,19}$',  # Pattern for person's first name
+    'l_name': r"^[a-z][a-z- .']{1,19}$",  # Pattern for person's last name
+    'age': r'^\d{1,3}$',  # Pattern for age
+    'city': r'^[a-z][a-z- ]{1,19}$',  # Pattern for city
+    'bookID': r'^\d{1,5}$',  # Pattern for book ID
+    'title': r"^[a-z0-9][a-z0-9- ,.':]{1,59}$",  # Pattern for book title
+    'pub_year': r'^\d{4}$',  # Pattern for publication year
+    'book_type': r'^[1-3]$',  # Pattern for book type
+    'date': r'^\d{4}-\d{2}-\d{2}$',  # Pattern for date
+    'loanID': r'^\d{1,5}$'  # Pattern for loan ID
+}
 
+# Custom error messages corresponding to the validation patterns
 ERRORS = {'custID': 'Invalid ID number. Must only contain 6-9 numbers.',
           'p_name': 'Invalid first name. Must only contain up to 20 letters.',
           'l_name': 'Invalid last name. Must only contain up to 20 letters.',

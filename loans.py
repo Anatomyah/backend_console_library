@@ -8,8 +8,38 @@ from books import Book
 
 
 class Loan(DataBaseHandler):
+    """
+        Represents a loan record in the library system.
+
+        This class provides functionalities to manage loan records, including creation,
+        retrieval, update, and deletion of loan records in the database.
+
+        Inherits from DataBaseHandler and implements its abstract methods.
+
+        Attributes:
+            id (str): Unique identifier of the loan.
+            _customer (Customer): Customer object associated with the loan.
+            _book (Book): Book object associated with the loan.
+            loan_date (date): Date when the loan was made.
+            expected_return_date (date): Expected date for returning the loaned book.
+            _actual_return_date (date or str): Actual return date of the loaned book or 'Not returned'.
+        """
+
     def __init__(self, customer_id, book_id, loan_date=None, expected_return_date=None,
                  actual_return_date=None, loan_id=None, override_id=False):
+        """
+        Initializes a new Loan object.
+
+        Parameters:
+            customer_id (str): ID of the customer.
+            book_id (str): ID of the book.
+            loan_date (date, optional): Date when the loan was made. Defaults to today's date if not provided.
+            expected_return_date (date, optional): Expected return date. Calculated based on book type if not provided.
+            actual_return_date (date or str, optional): Actual return date of the book. Defaults to 'Not returned'.
+            loan_id (str, optional): Unique identifier for the loan. Auto-generated if not provided.
+            override_id (bool): Flag to indicate whether to use the provided loan_id or generate a new one.
+        """
+
         self.customer = customer_id
         self.book = book_id
 
@@ -28,6 +58,7 @@ class Loan(DataBaseHandler):
             self.expected_return_date = expected_return_date
             self.actual_return_date = actual_return_date
 
+    # Property definitions for customer, book, and actual_return_date...
     @property
     def customer(self):
         return self._customer
@@ -88,6 +119,7 @@ class Loan(DataBaseHandler):
         return (f'{self.id}', f'{self._customer._id}', f'{self._book.id}',
                 f'{self.loan_date}', f'{self.expected_return_date}', f'{self._actual_return_date}')
 
+    # Implementation of abstract methods from DataBaseHandler...
     def get_table(self):
         return 'loans'
 
@@ -98,6 +130,9 @@ class Loan(DataBaseHandler):
         return self.id
 
     def show(self):
+        """
+               Display the details of the loan record.
+               """
         print(f"\n*** Loan Details ***\n"
               f"ID: {self.id}\n"
               f"Customer: {self._customer.id}\n"
@@ -108,6 +143,12 @@ class Loan(DataBaseHandler):
 
     @classmethod
     def load_from_db(cls):
+        """
+             Class method to load loan records from the database and create Loan objects.
+
+             Returns:
+                 list: A list of Loan objects loaded from the database.
+             """
         client_data = cls.load(table='loans')
 
         objects = []
@@ -124,6 +165,9 @@ class Loan(DataBaseHandler):
 
     @classmethod
     def create_loan_table(cls):
+        """
+               Class method to create the 'loans' table in the database if it does not exist.
+               """
         query = """
         CREATE TABLE IF NOT EXISTS loans (
             id TEXT PRIMARY KEY,
